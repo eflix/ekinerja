@@ -27,9 +27,19 @@
                 <input type="date" id="tanggal_lahir" name="tanggal_lahir" class="form-control" required>
             </div>
             <div class="form-group">
+                <label for="id_kelas_jabatan">Kelas Jabatan</label>
+                <select name="id_kelas_jabatan" id="id_kelas_jabatan" class="form-control" required>
+                    <?php
+                        foreach ($kelas_jabatan as $key => $value) { ?>
+                            <option value="<?= $value->id; ?>"><?= $value->kelas_jabatan; ?></option>
+                     <?php  }
+                    ?>
+                </select>
+            </div>
+
+            <div class="form-group">
                 <label for="jabatan">Jabatan</label>
                 <input type="text" id="jabatan" name="jabatan" class="form-control" placeholder="masukan jabatan" required>
-                <?= form_error('username', '<small class="text-danger pl-3">', '</small>'); ?> 
             </div>
 
         </div>
@@ -37,13 +47,33 @@
     <div class="col-sm-6">
 
         <div class="form-group">
-                <label for="golongan">Pangkat / Golongan</label>
-                <select name="golongan" id="golongan" class="form-control" required>
-                    <?php
+                <label for="pangkat_golongan">Pangkat / Golongan</label>
+                <select name="pangkat_golongan" id="pangkat_golongan" class="form-control" required>
+                    <option value="I.a">I.a</option>
+                    <option value="I.b">I.b</option>
+                    <option value="I.c">I.c</option>
+                    <option value="I.d">I.d</option>
+                    <option value="I.e">I.e</option>
+                    <option value="II.a">II.a</option>
+                    <option value="II.b">II.b</option>
+                    <option value="II.c">II.c</option>
+                    <option value="II.d">II.d</option>
+                    <option value="II.e">II.e</option>
+                    <option value="III.a">III.a</option>
+                    <option value="III.b">III.b</option>
+                    <option value="III.c">III.c</option>
+                    <option value="III.d">III.d</option>
+                    <option value="III.e">III.e</option>
+                    <option value="IV.a">IV.a</option>
+                    <option value="IV.b">IV.b</option>
+                    <option value="IV.c">IV.c</option>
+                    <option value="IV.d">IV.d</option>
+                    <option value="IV.e">IV.e</option>
+                    <!-- <?php
                         foreach ($golongan as $key => $value) { ?>
                             <option value="<?= $value->id; ?>"><?= $value->golongan; ?></option>
                      <?php  }
-                    ?>
+                    ?> -->
                 </select>
             </div>
             
@@ -61,8 +91,8 @@
             <div class="form-group">
                 <label for="role_id">Level User</label>
                 <select name="role_id" id="role_id" class="form-control" required>
+                    <option value="2">Pegawai</option>
                     <option value="1">Admin</option>
-                    <option value="2">Pewawai</option>
                 </select>
             </div>
 

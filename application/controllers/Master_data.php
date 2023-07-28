@@ -59,78 +59,6 @@ class Master_data extends CI_Controller {
 		$this->load->view('templates/footer');
     }
 
-	public function add_event(){
-		$data['title'] = 'Tambah Tokoh';
-		$data['user'] = $this->db->get_where('user', ['username' => $this->session->userdata('username')])->row_array();
-
-		// $data['provinces'] = $this->master_data_model->getAllProvince();
-
-		$this->load->view('templates/header', $data);
-		$this->load->view('templates/sidebar', $data);
-		$this->load->view('templates/topbar', $data);
-		$this->load->view('master_data/add_event', $data);
-		$this->load->view('templates/footer');
-	}
-
-	public function do_add_event(){
-		$kedb = [
-			'title' => $this->input->post('title', true),
-			'organizer' => $this->input->post('organizer', true),
-			'location_at' => $this->input->post('location_at', true),
-			'event_date' => date('Y-m-d\TH:i:s', strtotime($this->input->post('event_date'))),
-			'created_dt' => date('Y-m-d'),
-			'created_by' => $this->session->userdata('name')
-		];
-
-		$this->db->insert('events',$kedb);
-
-		redirect(base_url().'master_data/event');
-	}
-
-	public function edit_event(){
-		$data['title'] = 'Edit Event';
-		$data['user'] = $this->db->get_where('user', ['username' => $this->session->userdata('username')])->row_array();
-
-		$id = $this->input->get('id');
-
-		$data['event'] = $this->master_data_model->getEventById($id);
-
-		// $data['provinces'] = $this->master_data_model->getAllProvince();
-
-		$this->load->view('templates/header', $data);
-		$this->load->view('templates/sidebar', $data);
-		$this->load->view('templates/topbar', $data);
-		$this->load->view('master_data/edit_event', $data);
-		$this->load->view('templates/footer');
-	}
-
-	public function do_edit_event(){
-		$id = $this->input->post('id', true);
-		$kedb = [
-			'title' => $this->input->post('title', true),
-			'organizer' => $this->input->post('organizer', true),
-			'location_at' => $this->input->post('location_at', true),
-			'event_date' => date('Y-m-d\TH:i:s', strtotime($this->input->post('event_date'))),
-			'created_dt' => date('Y-m-d'),
-			'created_by' => $this->session->userdata('name')
-		];
-
-		$this->db->where('id',$id);
-		$this->db->update('events',$kedb);
-
-		redirect(base_url().'master_data/event');
-	}
-
-	public function do_delete_event(){
-		$id = $this->input->get('id');
-
-		if ($id){
-			$this->db->where('id',$id);
-			$this->db->delete('events');
-		}
-		redirect(base_url().'master_data/event');
-	}
-
 	public function kategori() 
     {
         $data['title'] = 'Daftar Kategori';
@@ -277,5 +205,53 @@ class Master_data extends CI_Controller {
 		}
 		redirect(base_url().'master_data/golongan');
 	}
+
+	public function kelas_jabatan() 
+    {
+        $data['title'] = 'Daftar Kelas Jabatan';
+		$data['user'] = $this->db->get_where('user', ['nip' => $this->session->userdata('nip')])->row_array();
+
+		$data['kelas_jabatan'] = $this->master_data_model->getAllKelasJabatan();
+
+		$this->load->view('templates/header', $data);
+		$this->load->view('templates/sidebar', $data);
+		$this->load->view('templates/topbar', $data);
+		$this->load->view('master_data/kelas_jabatan', $data);
+		$this->load->view('templates/footer');
+    }
+
+	public function do_add_edit_kelas_jabatan(){
+
+		$id = $this->input->post('id', true);
+		$id_user = $this->session->userdata('id_user');
+		$kedb = [
+			'kelas_jabatan' => $this->input->post('kelas_jabatan', true),
+			'tunjangan_jabatan' => $this->input->post('tunjangan', true),
+		];
+
+		if ($id == "") {
+			$this->db->insert('kelas_jabatan',$kedb);
+		} else {
+			$this->db->where('id',$id);
+			$this->db->update('kelas_jabatan',$kedb);
+		}
+		
+		redirect(base_url().'master_data/kelas_jabatan');
+	}
+
+	public function do_delete_kelas_jabatan(){
+		$id = $this->input->get('id');
+
+		if ($id){
+			$this->db->where('id',$id);
+			$this->db->delete('kelas_jabatan');
+		}
+		redirect(base_url().'master_data/kelas_jabatan');
+	}
+
+	public function getUnitKerjaById($id){
+        $data = $this->db->get_where('unit_kerja',['id' => $id])->row();
+        echo json_encode($data);
+    }
 	
 }

@@ -28,22 +28,23 @@
                     <!-- sub menu -->
                     <?php
                     $menuId = $m['id'];
-                    $querySubMenu = "select * from user_sub_menu join user_menu on (user_sub_menu.menu_id = user_menu.id) where user_sub_menu.menu_id = $menuId and user_sub_menu.is_active = 1";
+                    $querySubMenu = "select user_sub_menu.*,user_menu.*,user_sub_menu.id id_sub_menu from user_sub_menu join user_menu on (user_sub_menu.menu_id = user_menu.id) where user_sub_menu.menu_id = $menuId and user_sub_menu.is_active = 1";
 
                     $subMenu = $this->db->query($querySubMenu)->result_array();
                     ?>
 
-                    <?php foreach ($subMenu as $sm) : ?>
-                        <!-- Nav Item - Dashboard -->
+                    <?php foreach ($subMenu as $sm) :  ?>
                         <?php if ($title == $sm['title']) : ?>
                         <li class="nav-item active">
                         <?php else : ?>
                          <li class="nav-item">
-                         <?php endif; ?>
+                         <?php endif;  if ($role_id == 1 && $sm['id_sub_menu'] == 18) {
+                        } else {?>
                             <a class="nav-link pb-0 pt-1" href="<?= base_url($sm['url']); ?>">
                                 <i class="<?= ($sm['icon']); ?>"></i>
                                 <span><?=$sm['title']; ?></span></a>
-                        </li>
+                                <?php } ?>
+                            </li>
                     <?php endforeach; ?> 
 
                     <!-- Divider -->

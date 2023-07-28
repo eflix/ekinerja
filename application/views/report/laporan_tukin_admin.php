@@ -7,29 +7,49 @@
                     <h1 class="h3 mb-4 text-gray-800"><?= $title; ?></h1>
 
 					<div class="row">
-                        <div class="col md-10">
+                        <div class="col-md-10">
                                 <form action="" method="get">
                                     <div class="row">
-                                        <div class="col md-11 text-right">
+                                        <div class="col-md-2 text-right">
                                             <div class="form-group">
                                                 <select name="year" id="year" class="form-control">
                                                     <?php
                                                     $thisYear = date('Y');
                                                     for ($i=$thisYear; $i >= 2020 ; $i--) { ?>
-                                                        <option value="<?= $i; ?>"><?= $i; ?></option>
+                                                        <option value="<?= $i; ?>" <?= ($year == $i)?"selected":"";?> ><?= $i; ?></option>
                                                     <?php }
                                                     ?>
                                                 </select>
                                             </div>
+											
                                         </div>
-                                        <div class="col md-1">
+										<div class="col-md-2">
+											
+										<div class="form-group">
+                                                <select name="month" id="month" class="form-control">
+                                                    <option value="1" <?= ($month == 1)?"selected":"";?>>Januari</option>
+                                                    <option value="2" <?= ($month == 2)?"selected":"";?>>Februari</option>
+                                                    <option value="3" <?= ($month == 3)?"selected":"";?>>Maret</option>
+                                                    <option value="4" <?= ($month == 4)?"selected":"";?>>April</option>
+                                                    <option value="5" <?= ($month == 5)?"selected":"";?>>Mei</option>
+                                                    <option value="6" <?= ($month == 6)?"selected":"";?>>Jui</option>
+                                                    <option value="7" <?= ($month == 7)?"selected":"";?>>Juli</option>
+                                                    <option value="8" <?= ($month == 8)?"selected":"";?>>Agustus</option>
+                                                    <option value="9" <?= ($month == 9)?"selected":"";?>>September</option>
+                                                    <option value="10" <?= ($month == 10)?"selected":"";?>>Oktober</option>
+                                                    <option value="11" <?= ($month == 11)?"selected":"";?>>November</option>
+                                                    <option value="12" <?= ($month == 12)?"selected":"";?>>Desember</option>
+                                                </select>
+                                            </div>
+										</div>
+                                        <div class="col-md-1">
                                             <button class="btn btn-warning btn-sm" type="submit" value="Submit">Cari</button>
                                         </div>
                                     </div>
                             </form>
                         </div>
-						<div class="col md-2 text-right">
-							<a class="btn btn-success btn-sm" href="<?= base_url(); ?>report/download_tukin?year=<?=$year?>">Download PDF</a>
+						<div class="col-md-2 text-right">
+							<a class="btn btn-success btn-sm" href="<?= base_url(); ?>report/download_tukin_admin?year=<?=$year?>&month=<?=$month;?>">Download PDF</a>
 							<!-- <a class="btn btn-primary btn-sm" href="<?= base_url(); ?>report/print_ktp?param=all&value=">Print KTP</a> -->
 						</div>
 					</div>
@@ -46,6 +66,7 @@
 				        <thead>
 				          <tr>
 				            <th scope="col">#</th>
+				            <th class="">Nama</th>
 				            <th class="">Bulan</th>
 				            <th class="">Tunjangan</th>
 				            <th class="">Potongan</th>
@@ -58,6 +79,7 @@
 					          foreach ($tukin as $key => $value) : ?>
 					          <tr>
 					            <td><?= $key+1 ?></td>
+					            <td><?= $value->nama; ?></td>
 					            <td><?= $value->bulan; ?></td>
 					            <td class=""><?= number_format($value->tunjangan_jabatan,2); ?></td>
 					            <td class=""><?= number_format($value->potongan,2); ?></td>

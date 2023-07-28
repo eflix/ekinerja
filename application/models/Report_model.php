@@ -170,12 +170,13 @@ class Report_model extends CI_Model {
 	}
 
 	public function getAllTukin($id_user,$year){
-		$query = "SELECT bulan,tunjangan,0.3*tunjangan potongan,tunjangan-(0.3*tunjangan) jml_bersih 
+		$query = "SELECT bulan,tunjangan_jabatan,jml_tdk_masuk*potongan potongan,tunjangan_jabatan-(jml_tdk_masuk*potongan) jml_bersih 
 		FROM (
-		select bulan,(jml_masuk/20)*bobot*0.6 tunjangan,jml_masuk FROM (
-					SELECT MONTH(a.tanggal) bulan,COUNT(a.tanggal) jml_masuk,c.bobot FROM laporan_harian a
+		select bulan,jml_masuk,20-jml_masuk jml_tdk_masuk,tunjangan_jabatan,
+		(0.3/100)*tunjangan_jabatan potongan FROM (
+					SELECT MONTH(a.tanggal) bulan,COUNT(a.tanggal) jml_masuk,c.tunjangan_jabatan FROM laporan_harian a
 					LEFT OUTER JOIN user b ON (a.id_user = b.id)
-					LEFT OUTER JOIN golongan c ON (b.id_golongan = c.id) 
+					LEFT OUTER JOIN kelas_jabatan c ON (b.id_kelas_jabatan = c.id) 
 					WHERE a.id_user = $id_user AND YEAR(a.tanggal) = $year
 					) tunjangan
 		) tunjangan";
@@ -184,10 +185,43 @@ class Report_model extends CI_Model {
 		return $data->result();
 	}
 
-	public function getPenandatangananByUnitKerja($id_unit_kerja){
-		return $query = $this->db->get_where('penandatanganan',['id_unit_kerja' => $id_unit_kerja])->row();
+	public function getAllTukinAdmin($year,$month){
+		$query = "SELECT nama,bulan,tunjangan_jabatan,jml_tdk_masuk*potongan potongan,tunjangan_jabatan-(jml_tdk_masuk*potongan) jml_bersih 
+		FROM (
+		select nama,bulan,jml_masuk,20-jml_masuk jml_tdk_masuk,tunjangan_jabatan,
+		(0.3/100)*tunjangan_jabatan potongan FROM (
+					SELECT b.nama,MONTH(a.tanggal) bulan,COUNT(a.tanggal) jml_masuk,c.tunjangan_jabatan FROM laporan_harian a
+					LEFT OUTER JOIN user b ON (a.id_user = b.id)
+					LEFT OUTER JOIN kelas_jabatan c ON (b.id_kelas_jabatan = c.id) 
+					WHERE YEAR(a.tanggal) = $year AND MONTH(a.tanggal) = $month
+					GROUP BY b.nama
+					) tunjangan
+		) tunjangan";
+		
+		$data = $this->db->query($query);
+		return $data->result();
 	}
 
+	public function getPenandatangananByUnitKerja($id_unit_kerja){
+		// return $query = $this->db->get('penandatanganan a')
+		// 				->join('unit_kerja b','a.id_unit_kerja = b.id','inner')
+		// 				->row();
+
+		$query = "select a.*,b.unit_kerja from penandatanganan a
+				inner join unit_kerja b on (a.id_unit_kerja = b.id)
+				where a.id_unit_kerja = $id_unit_kerja";
+		
+		$data = $this->db->query($query);
+		return $data->row();
+	}
+
+	public function getAllUser(){
+		return $query = $this->db->get_where('user',['role_id' => 2,'is_active' => 1])->result();
+	}
+
+	public function getUserById($id){
+		return $query = $this->db->get_where('user',['id'=>$id])->row();
+	}
 }
 
 ?>

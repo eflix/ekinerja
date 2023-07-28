@@ -7,22 +7,35 @@
                     <h1 class="h3 mb-4 text-gray-800"><?= $title; ?></h1>
 
 					<div class="row">
-                        <div class="col md-10">
+                        <div class="col-md-10">
                                 <form action="" method="get">
                                     <div class="row">
-                                        <div class="col md-11 text-right">
+                                        <div class="col-md-4 text-right">
                                             <div class="form-group">
-                                                <input type="date" class="form-control" id="tanggal" name="tanggal" value="<?= date('Y-m-d') ?>">
+                                                <input type="date" class="form-control" id="tanggal" name="tanggal" value="<?= date('Y-m-d',$tanggal) ?>">
                                             </div>
                                         </div>
+										<?php if ($user['role_id'] == 1) { ?>
+										<div class="col-md-6">
+										<!-- <label for="id_pegawai">Pegawai</label> -->
+											<select name="id_pegawai" id="id_pegawai" class="form-control" required>
+												<option value=""></option>
+												<?php
+													foreach ($users as $key => $value) { ?>
+														<option value="<?= $value->id; ?>" <?= ($id_pegawai==$value->id)?"selected":""; ?>><?= $value->nama; ?></option>
+												<?php  }
+												?>
+											</select>
+										</div>
+										<?php } ?>
                                         <div class="col md-1">
                                             <button class="btn btn-warning btn-sm" type="submit" value="Submit">Cari</button>
                                         </div>
                                     </div>
                             </form>
                         </div>
-						<div class="col md-2 text-right">
-							<a class="btn btn-success btn-sm" href="<?= base_url(); ?>report/download_laporan?tanggal=<?=$tanggal?>">Download PDF</a>
+						<div class="col-md-2 text-right">
+							<a class="btn btn-success btn-sm" href="<?= base_url(); ?>report/download_laporan?tanggal=<?=$tanggal?>&id_pegawai=<?=$id_pegawai;?>">Download PDF</a>
 							<!-- <a class="btn btn-primary btn-sm" href="<?= base_url(); ?>report/print_ktp?param=all&value=">Print KTP</a> -->
 						</div>
 					</div>
@@ -39,12 +52,30 @@
 				        <thead>
 				          <tr>
 				            <th scope="col">#</th>
+				            <th width="15%" class="">Hari</th>
 				            <th width="15%" class="">Tanggal</th>
 				            <th class="">Laporan</th>
 				          </tr>
 				        </thead>
 				        <tbody>
 				        	<?php 
+							$month_end = strtotime('last day of this month', $tanggal);
+							$month_start = strtotime('first day of this month', $tanggal);
+							$end_month = date('d', $month_end);
+
+							$haricuti = array();
+							$sabtuminggu = array();
+							
+							for ($i=$month_start; $i <= $month_end; $i += (60 * 60 * 24)) {
+								if (date('w', $i) !== '0' && date('w', $i) !== '6') {
+									$haricuti[] = $i;
+								} else {
+									$sabtuminggu[] = $i;
+								}
+							
+							}
+							$jumlah_cuti = count($haricuti);
+
 							$laporan = [];
 								foreach ($laporan_harian as $key => $value) :  
 									$laporan[] = [
@@ -52,31 +83,26 @@
 									];
 								 endforeach; 
 
-								$month = date("m",$tanggal);
-								$year = date("Y",$tanggal);
-
-								for ($i=1; $i <= 31; $i++) { 
-									if (strlen($i) == 1){
-										$tanggal = "$year-$month-0$i";
-									} else {
-										$tanggal = "$year-$month-$i";
-									}
-
+								 foreach ($haricuti as $key => $value1) {
+									$tgl = date('Y-m-d', $value1);
+									$hari = strftime("%A", date($value1));
 									?>
 									<tr>
-										<td width="5%"><?= $i ?></td>
-										<td width="15%"><?= $tanggal; ?></td>
+										<td width="5%"><?= $key+1 ?></td>
+										<td width="15%"><?= $hari; ?></td>
+										<td width="15%"><?= $tgl; ?></td>
 										<td><?php 
 										if ($laporan) {
 											foreach ($laporan as $key => $value) {
-												if (!empty($value[$tanggal])) {
-													echo $value[$tanggal];
+												if (!empty($value[$tgl])) {
+													echo $value[$tgl];
 												}
 											}
 										}
 										?></td>
 									</tr>
-									<?php 
+									<?php
+									
 								}
 
 							?>  

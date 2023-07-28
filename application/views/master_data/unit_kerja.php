@@ -42,8 +42,8 @@
 					            <td><?= $value->unit_kerja; ?></td>
 					            <td class="col-xs-5"><?= $value->tingkatan; ?></td>
 								<td style="width:12%">
-									<!-- <a class="btn btn-warning btn-sm" href="<?=base_url();?>master_data/edit_event?id=<?=$value->id;?>">edit</a> -->
-									<a class="btn btn-danger btn-sm" href="<?=base_url();?>master_data/do_delete_unit_kerja?id=<?=$value->id;?>">hapus</a>
+									<button class="btn btn-warning btn-sm" onclick="edit(<?=$value->id;?>)">edit</button>
+									<a class="btn btn-danger btn-sm hapus" href="<?=base_url();?>master_data/do_delete_unit_kerja?id=<?=$value->id;?>">hapus</a>
 								</td>
 					          </tr>
 				        	<?php $i++; endforeach; ?>  
@@ -89,6 +89,33 @@
     </div>
   </div>
 </div>	   
+
+<div class="modal fade" id="confirmModal" >
+	<div class="modal-dialog">
+		<div class="modal-content">
+		<!--<div class="overlay">
+			<i class="fas fa-2x fa-sync fa-spin"></i>
+		</div>-->
+		<div class="modal-header">
+			<h4 class="modal-title">Konfirmasi</h4>
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			<span aria-hidden="true">&times;</span>
+			</button>
+		</div>
+		<div class="modal-body">
+			<p>Yakin hapus data ini?</p>
+		</div>
+		<div class="modal-footer justify-content-between">
+			<button type="button" class="btn btn-default" data-dismiss="modal">Batal</button>
+			<button type="button" class="btn btn-danger" onclick="confirmAction()" >Ya, hapus sekarang</button>
+		</div>
+		</div>
+		<!-- /.modal-content -->
+	</div>
+	<!-- /.modal-dialog -->
+	</div>
+	<!-- /.modal -->
+
 			<!-- Bootstrap core JavaScript-->
 			<script src="<?= base_url('assets'); ?>/vendor/jquery/jquery.min.js"></script>
 			<script src="<?= base_url('assets'); ?>/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -107,5 +134,35 @@
 					scrollX:        true,
 					scrollCollapse: true,
 				});
+
+				function edit(id){
+                    $("#newMenuModal").modal("show")
+                    $("#newMenuModalLabel").html("Edit Unit Kerja")
+
+                    var url = "<?= base_url() ?>master_data/getUnitKerjaById/"+id;
+                    $.get(url, function(data, status){
+						data = JSON.parse(data)
+                        $("#id").val(data['id']);
+                        $("#unit_kerja").val(data['unit_kerja']);
+                        $("#tingkatan").val(data['tingkatan']);
+                    });
+                }
+
+				$(".hapus").click(function (e) {
+					e.preventDefault();
+					URL = $(this).attr("href");
+					$("#confirmModal").modal({
+						backdrop: "static"
+					});
+				});
+
+				function confirmAction() {
+					$.ajax({
+						type: "GET",
+						url: URL,
+					}).done(function (msg) {
+						location.reload();
+					});
+				}
 
 			</script>

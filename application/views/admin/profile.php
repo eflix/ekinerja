@@ -13,46 +13,70 @@
             <div class="row">
                 <div class="row col-md-6">
                     <div class="col-md-5 text-right">
-                        <span>Nama</span>
+                        <div class="form-group">
+                            <span>Nama</span>
+                        </div>
                     </div>
                     <div class="col-md-7 text-left">
-                        <?= "  :     " . $pegawai->nama; ?>
+                        <div class="form-group">
+                            <?= "  :     " . $pegawai->nama; ?>
+                        </div>
                     </div>
                     <div class="col-md-5 text-right">
-                        <span>NIP</span>
+                        <div class="form-group">
+                            <span>NIP</span>
+                        </div>
                     </div>
                     <div class="col-md-7 text-left">
                         <?= "  :     " . $pegawai->nip; ?>
                     </div>
                     <div class="col-md-5 text-right">
-                        <span>Tempat Lahir</span>
+                        <div class="form-group">
+                            <span>Tempat Lahir</span>
+                        </div>
                     </div>
                     <div class="col-md-7 text-left">
                         <?= "  :     " . $pegawai->tempat_lahir; ?>
                     </div>
                     <div class="col-md-5 text-right">
-                        <span>Tanggal Lahir</span>
+                        <div class="form-group">
+                            <span>Tanggal Lahir</span>
+                        </div>
                     </div>
                     <div class="col-md-7 text-left">
                         <?= "  :     " . $pegawai->tanggal_lahir; ?>
                     </div>
                     <div class="col-md-5 text-right">
-                        <span>Jabatan</span>
+                        <div class="form-group">
+                            <span>Jabatan</span>
+                        </div>
                     </div>
                     <div class="col-md-7 text-left">
                         <?= "  :     " . $pegawai->jabatan; ?>
                     </div>
                     <div class="col-md-5 text-right">
-                        <span>Pangkat / Golongan</span>
+                        <div class="form-group">
+                            <span>Pangkat / Golongan</span>
+                        </div>
                     </div>
                     <div class="col-md-7 text-left">
-                        <?= "  :     " . $pegawai->golongan; ?>
+                        <?= "  :     " . $pegawai->pangkat_golongan; ?>
                     </div>
                     <div class="col-md-5 text-right">
-                        <span>Unit Kerja</span>
+                        <div class="form-group">
+                            <span>Unit Kerja</span>
+                        </div>
                     </div>
                     <div class="col-md-7 text-left">
                         <?= "  :     " . $pegawai->unit_kerja; ?>
+                    </div>
+                    <div class="col-md-5 text-right">
+                        <div class="form-group">
+                            <span>Kelas Jabatan</span>
+                        </div>
+                    </div>
+                    <div class="col-md-7 text-left">
+                        <?= "  :     " . $pegawai->kelas_jabatan; ?>
                     </div>
                 </div>
                 <div class="row col-md-6">

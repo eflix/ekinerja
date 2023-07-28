@@ -116,6 +116,9 @@ class Master_data_model extends CI_Model {
 		return $query = $this->db->get('golongan')->result();
 	}
 	
+	public function getAllKelasJabatan(){
+		return $query = $this->db->get('kelas_jabatan')->result();
+	}
 }
 
 ?>

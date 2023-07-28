@@ -21,8 +21,8 @@ class Admin_model extends CI_Model {
 	}
 
 	public function getUserPegawai($id){
-		$query = "SELECT a.*,b.golongan,c.unit_kerja,c.tingkatan FROM user a
-		LEFT OUTER JOIN golongan b ON (a.id_golongan = b.id)
+		$query = "SELECT a.*,b.kelas_jabatan,c.unit_kerja,c.tingkatan FROM user a
+		LEFT OUTER JOIN kelas_jabatan b ON (a.id_kelas_jabatan = b.id)
 		LEFT OUTER JOIN unit_kerja c ON (a.id_unit_kerja = c.id)
 		WHERE a.id = $id";
 		
