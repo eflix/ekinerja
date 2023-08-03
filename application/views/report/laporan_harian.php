@@ -6,13 +6,17 @@
                     <!-- Page Heading -->
                     <h1 class="h3 mb-4 text-gray-800"><?= $title; ?></h1>
 
+					<?php 
+						$disBulan = $this->input->get('tanggal');
+					?>
+
 					<div class="row">
                         <div class="col-md-10">
                                 <form action="" method="get">
                                     <div class="row">
                                         <div class="col-md-4 text-right">
                                             <div class="form-group">
-                                                <input type="date" class="form-control" id="tanggal" name="tanggal" value="<?= date('Y-m-d',$tanggal) ?>">
+                                                <input type="month" class="form-control" id="tanggal" name="tanggal" value="<?= $disBulan ?>">
                                             </div>
                                         </div>
 										<?php if ($user['role_id'] == 1) { ?>

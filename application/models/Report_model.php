@@ -222,6 +222,15 @@ class Report_model extends CI_Model {
 	public function getUserById($id){
 		return $query = $this->db->get_where('user',['id'=>$id])->row();
 	}
+
+	public function getEselonI(){
+		$query = "select a.* from penandatanganan a
+		inner join unit_kerja b on (a.id_unit_kerja = b.id)
+		where lower(b.unit_kerja) = 'eselon I'";
+		
+		$data = $this->db->query($query);
+		return $data->row();
+	}
 }
 
 ?>

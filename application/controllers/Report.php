@@ -432,6 +432,16 @@ class Report extends CI_Controller {
 		$month = $this->input->get('month');
 
 		$tukin = $this->report_model->getAllTukinAdmin($year,$month);
+
+		$eselon = $this->report_model->getEselonI();
+
+		if ($eselon) {
+			$namaEselon = $eselon->nama;
+			$nipEselon = $eselon->nip;
+		} else {
+			$namaEselon = "";
+			$nipEselon = "";
+		}
 		
 		$pdf = new FPDF('P','mm','A4');
         // membuat halaman baru
@@ -447,18 +457,6 @@ class Report extends CI_Controller {
         $pdf->Cell(190,7,'',0,1,'C');
 
 		$pdf->SetFont('Arial','',12);
-
-		// $pdf->Cell(20,7,'Nama',0,0,'');
-		// $pdf->Cell(3,7,':',0,0,'');
-		// $pdf->Cell(20,7,$data['user']['nama'],0,1,'');
-
-		// $pdf->Cell(20,7,'NIP',0,0,'');
-		// $pdf->Cell(3,7,':',0,0,'');
-		// $pdf->Cell(20,7,$data['user']['nip'],0,1,'');
-
-		// $pdf->Cell(20,7,'Unit Kerja',0,0,'');
-		// $pdf->Cell(3,7,':',0,0,'');
-		// $pdf->Cell(20,7,'',0,1,'');
 
 		$pdf->Cell(20,7,'Tahun',0,0,'');
 		$pdf->Cell(3,7,':',0,0,'');
@@ -483,6 +481,34 @@ class Report extends CI_Controller {
 			$pdf->Cell(50,7,number_format($value->potongan,2),1,0,'');
 			$pdf->Cell(50,7,number_format($value->jml_bersih,2),1,1,'');
 		}
+
+
+		$signY = 200;
+
+		// $pdf->SetY($signY);
+		// $pdf->SetX(20);
+		// $pdf->Cell(40,7,(isset($kepala_sign->jabatan))?$kepala_sign->jabatan:"",0,0,'C');
+
+		// $pdf->ln(20);
+		$nameY = $signY+40;
+
+		$pdf->SetY($nameY);
+		// $pdf->SetX(20);
+		// $pdf->Cell(40,7,(isset($kepala_sign->nama))?$kepala_sign->nama:"",0,1,'C');
+		// $pdf->SetX(20);
+		// $pdf->Cell(40,7,'NIP. '.(isset($kepala_sign->nip))?$kepala_sign->nip:"",0,0,'C');
+
+		$pdf->SetY($signY);
+		$pdf->SetX(160);
+		$pdf->Cell(40,7,'Jakarta, ' . date('d M Y'),0,1,'C');
+		$pdf->SetX(160);
+		$pdf->Cell(40,7,'Kepala Esselon I',0,1,'C');
+		// $pdf->ln(40);
+		$pdf->SetY($nameY);
+		$pdf->SetX(160);
+		$pdf->Cell(40,7,$namaEselon ,0,1,'C');
+		$pdf->SetX(160);
+		$pdf->Cell(40,7,'NIP. '.$nipEselon,0,0,'C');
 
 		$pdf->Output();
 	}
