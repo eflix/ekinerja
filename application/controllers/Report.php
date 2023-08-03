@@ -269,6 +269,7 @@ class Report extends CI_Controller {
 				}
 			$pdf->MultiCell(130,7,$keterangan,1,1,'');
 		}
+
 		$signY = $pdf->GetY();
 
 		$pdf->SetY($signY);
@@ -293,8 +294,6 @@ class Report extends CI_Controller {
 		$pdf->Cell(40,7,$nama ,0,1,'C');
 		$pdf->SetX(160);
 		$pdf->Cell(40,7,'NIP. '.$nip,0,0,'C');
-
-
 
 		$pdf->Output();
 	}
@@ -337,9 +336,15 @@ class Report extends CI_Controller {
 		$data['user'] = $this->db->get_where('user', ['nip' => $this->session->userdata('nip')])->row_array();
 		$id_user = $this->session->userdata('id_user');
 
+		$id_unit_kerja = $this->session->userdata('id_unit_kerja');
+		$nama = $this->session->userdata('nama');
+		$nip = $this->session->userdata('nip');
+
 		$year = $this->input->get('year');
 
 		$tukin = $this->report_model->getAllTukin($id_user,$year);
+
+		$kepala_sign = $this->report_model->getPenandatangananByUnitKerja($id_unit_kerja);
 		
 		$pdf = new FPDF('P','mm','A4');
         // membuat halaman baru
@@ -387,12 +392,41 @@ class Report extends CI_Controller {
 			$pdf->Cell(50,7,number_format($value->jml_bersih,2),1,1,'');
 		}
 
+		$signY = 230;
+
+		$pdf->SetY($signY);
+		$pdf->SetX(20);
+		$pdf->Cell(40,7,(isset($kepala_sign->jabatan))?$kepala_sign->jabatan:"",0,0,'C');
+
+		$pdf->ln(20);
+		$nameY = $signY+30;
+
+		$pdf->SetY($nameY);
+		$pdf->SetX(20);
+		$pdf->Cell(40,7,(isset($kepala_sign->nama))?$kepala_sign->nama:"",0,1,'C');
+		$pdf->SetX(20);
+		$pdf->Cell(40,7,'NIP. '.(isset($kepala_sign->nip))?$kepala_sign->nip:"",0,0,'C');
+
+		$pdf->SetY($signY);
+		$pdf->SetX(160);
+		$pdf->Cell(40,7,'Pegawai',0,1,'C');
+		$pdf->ln(30);
+		$pdf->SetY($nameY);
+		$pdf->SetX(160);
+		$pdf->Cell(40,7,$nama ,0,1,'C');
+		$pdf->SetX(160);
+		$pdf->Cell(40,7,'NIP. '.$nip,0,0,'C');
+
 		$pdf->Output();
 	}
 
 	public function download_tukin_admin(){
 		$data['user'] = $this->db->get_where('user', ['nip' => $this->session->userdata('nip')])->row_array();
 		$id_user = $this->session->userdata('id_user');
+		
+		$id_unit_kerja = $this->session->userdata('id_unit_kerja');
+		$nama = $this->session->userdata('nama');
+		$nip = $this->session->userdata('nip');
 
 		$year = $this->input->get('year');
 		$month = $this->input->get('month');

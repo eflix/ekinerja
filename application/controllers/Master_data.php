@@ -226,7 +226,7 @@ class Master_data extends CI_Controller {
 		$id_user = $this->session->userdata('id_user');
 		$kedb = [
 			'kelas_jabatan' => $this->input->post('kelas_jabatan', true),
-			'tunjangan_jabatan' => $this->input->post('tunjangan', true),
+			'nama' => $this->input->post('tunjangan', true),
 		];
 
 		if ($id == "") {
@@ -253,5 +253,62 @@ class Master_data extends CI_Controller {
         $data = $this->db->get_where('unit_kerja',['id' => $id])->row();
         echo json_encode($data);
     }
+
+	public function penandatanganan() 
+    {
+        $data['title'] = 'Daftar Tanda Tangan';
+		$data['user'] = $this->db->get_where('user', ['nip' => $this->session->userdata('nip')])->row_array();
+
+		$data['penandatanganan'] = $this->master_data_model->getAllPenandatanganan();
+		$data['unit_kerja'] = $this->master_data_model->getAllUnitKerja();
+
+		$this->load->view('templates/header', $data);
+		$this->load->view('templates/sidebar', $data);
+		$this->load->view('templates/topbar', $data);
+		$this->load->view('master_data/penandatanganan', $data);
+		$this->load->view('templates/footer');
+    }
+
+	public function do_add_edit_penandatanganan(){
+
+		$id = $this->input->post('id', true);
+		$id_unit_kerja = $this->input->post('id_unit_kerja', true);
+
+		$kedb = [
+			'id_unit_kerja' => $this->input->post('id_unit_kerja', true),
+			'nama' => $this->input->post('nama', true),
+			'nip' => $this->input->post('nip', true),
+			'jabatan' => $this->input->post('jabatan', true),
+		];
+
+		if ($id == "") {
+			// echo "insert";
+			$cekUnitKerja = $this->db->get_where('penandatanganan',['id_unit_kerja' => $id_unit_kerja])->result();
+
+			if ($cekUnitKerja) {
+				// echo "ada";
+				$this->db->where('id_unit_kerja',$id_unit_kerja);
+				$this->db->update('penandatanganan',$kedb);
+			} else {
+				// echo "kosong";
+				$this->db->insert('penandatanganan',$kedb);
+			}
+		} else {
+			$this->db->where('id',$id);
+			$this->db->update('penandatanganan',$kedb);
+		}
+
+		redirect(base_url().'master_data/penandatanganan');
+	}
+
+	public function do_delete_penandatanganan(){
+		$id = $this->input->get('id');
+
+		if ($id){
+			$this->db->where('id',$id);
+			$this->db->delete('penandatanganan');
+		}
+		redirect(base_url().'master_data/penandatanganan');
+	}
 	
 }

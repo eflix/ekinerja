@@ -119,6 +119,14 @@ class Master_data_model extends CI_Model {
 	public function getAllKelasJabatan(){
 		return $query = $this->db->get('kelas_jabatan')->result();
 	}
+
+	public function getAllPenandatanganan(){
+		$query = "select a.*,b.unit_kerja from penandatanganan a
+		inner join unit_kerja b on (a.id_unit_kerja = b.id)";
+		
+		$data = $this->db->query($query);
+		return $data->result();
+	}
 }
 
 ?>
