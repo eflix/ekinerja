@@ -172,13 +172,20 @@ class Report_model extends CI_Model {
 	public function getAllTukin($id_user,$year){
 		$query = "SELECT bulan,tunjangan_jabatan,jml_tdk_masuk*potongan potongan,tunjangan_jabatan-(jml_tdk_masuk*potongan) jml_bersih 
 		FROM (
-		select bulan,jml_masuk,20-jml_masuk jml_tdk_masuk,tunjangan_jabatan,
+		select bulan,jml_masuk,
+		hari_kerja-jml_masuk jml_tdk_masuk,
+		tunjangan_jabatan,
 		(0.3/100)*tunjangan_jabatan potongan FROM (
-					SELECT MONTH(a.tanggal) bulan,COUNT(a.tanggal) jml_masuk,c.tunjangan_jabatan FROM laporan_harian a
-					LEFT OUTER JOIN user b ON (a.id_user = b.id)
-					LEFT OUTER JOIN kelas_jabatan c ON (b.id_kelas_jabatan = c.id) 
-					WHERE a.id_user = $id_user AND YEAR(a.tanggal) = $year
-					) tunjangan
+		SELECT MONTH(a.tanggal) bulan,
+		case MONTH(a.tanggal) when 1 then 22 when 2 then 20 when 3 then 23 when 4 then 20 when 5 then 23
+		when 6 then 22 when 7 then 21 when 8 then 21 when 9 then 21 when 10 then 22 when 11 then 22
+		when 12 then 21 ELSE 20 END hari_kerja,
+		COUNT(a.tanggal) jml_masuk,c.tunjangan_jabatan FROM laporan_harian a
+		LEFT OUTER JOIN user b ON (a.id_user = b.id)
+		LEFT OUTER JOIN kelas_jabatan c ON (b.id_kelas_jabatan = c.id) 
+		WHERE a.id_user = $id_user AND YEAR(a.tanggal) = $year
+		GROUP BY MONTH(a.tanggal)
+		) tunjangan
 		) tunjangan";
 		
 		$data = $this->db->query($query);
@@ -188,14 +195,18 @@ class Report_model extends CI_Model {
 	public function getAllTukinAdmin($year,$month){
 		$query = "SELECT nama,bulan,tunjangan_jabatan,jml_tdk_masuk*potongan potongan,tunjangan_jabatan-(jml_tdk_masuk*potongan) jml_bersih 
 		FROM (
-		select nama,bulan,jml_masuk,20-jml_masuk jml_tdk_masuk,tunjangan_jabatan,
+		select nama,bulan,jml_masuk,hari_kerja-jml_masuk jml_tdk_masuk,tunjangan_jabatan,
 		(0.3/100)*tunjangan_jabatan potongan FROM (
-					SELECT b.nama,MONTH(a.tanggal) bulan,COUNT(a.tanggal) jml_masuk,c.tunjangan_jabatan FROM laporan_harian a
-					LEFT OUTER JOIN user b ON (a.id_user = b.id)
-					LEFT OUTER JOIN kelas_jabatan c ON (b.id_kelas_jabatan = c.id) 
-					WHERE YEAR(a.tanggal) = $year AND MONTH(a.tanggal) = $month
-					GROUP BY b.nama
-					) tunjangan
+		SELECT b.nama,MONTH(a.tanggal) bulan,
+		case MONTH(a.tanggal) when 1 then 22 when 2 then 20 when 3 then 23 when 4 then 20 when 5 then 23
+		when 6 then 22 when 7 then 21 when 8 then 21 when 9 then 21 when 10 then 22 when 11 then 22
+		when 12 then 21 ELSE 20 END hari_kerja,
+		COUNT(a.tanggal) jml_masuk,c.tunjangan_jabatan FROM laporan_harian a
+		LEFT OUTER JOIN user b ON (a.id_user = b.id)
+		LEFT OUTER JOIN kelas_jabatan c ON (b.id_kelas_jabatan = c.id) 
+		WHERE YEAR(a.tanggal) = $year AND MONTH(a.tanggal) = $month
+		GROUP BY b.nama
+		) tunjangan
 		) tunjangan";
 		
 		$data = $this->db->query($query);

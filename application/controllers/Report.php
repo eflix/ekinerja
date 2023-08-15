@@ -274,26 +274,28 @@ class Report extends CI_Controller {
 
 		$pdf->SetY($signY);
 		$pdf->SetX(20);
-		$pdf->Cell(40,7,(isset($kepala_sign->jabatan))?$kepala_sign->jabatan:"",0,0,'C');
+		$pdf->Cell(60,7,(isset($kepala_sign->jabatan))?$kepala_sign->jabatan:"",0,0,'C');
 
 		$pdf->ln(20);
 		$nameY = $pdf->GetY();
 
 		$pdf->SetY($nameY);
 		$pdf->SetX(20);
-		$pdf->Cell(40,7,(isset($kepala_sign->nama))?$kepala_sign->nama:"",0,1,'C');
+		$pdf->Cell(60,7,(isset($kepala_sign->nama))?$kepala_sign->nama:"",0,1,'C');
 		$pdf->SetX(20);
-		$pdf->Cell(40,7,'NIP. '.(isset($kepala_sign->nip))?$kepala_sign->nip:"",0,0,'C');
+		$pdf->Cell(60,7,'NIP. '.(isset($kepala_sign->nip))?$kepala_sign->nip:"",0,0,'C');
 
 		$pdf->SetY($signY);
 		$pdf->SetX(160);
-		$pdf->Cell(40,7,'Pegawai',0,1,'C');
-		$pdf->ln(30);
+		$pdf->Cell(40,7,'Jakarta, ' . date('d M Y'),0,1,'C');
+		$pdf->SetX(160);
+		$pdf->Cell(60,7,'Pegawai',0,1,'C');
+		$pdf->ln(40);
 		$pdf->SetY($nameY);
 		$pdf->SetX(160);
-		$pdf->Cell(40,7,$nama ,0,1,'C');
+		$pdf->Cell(60,7,$nama ,0,1,'C');
 		$pdf->SetX(160);
-		$pdf->Cell(40,7,'NIP. '.$nip,0,0,'C');
+		$pdf->Cell(60,7,'NIP. '.$nip,0,0,'C');
 
 		$pdf->Output();
 	}
@@ -429,6 +431,8 @@ class Report extends CI_Controller {
 		$nip = $this->session->userdata('nip');
 
 		$year = $this->input->get('year');
+
+		
 		$month = $this->input->get('month');
 
 		$tukin = $this->report_model->getAllTukinAdmin($year,$month);
@@ -464,22 +468,23 @@ class Report extends CI_Controller {
 
 		$pdf->Cell(20,7,'Bulan',0,0,'');
 		$pdf->Cell(3,7,':',0,0,'');
-		$pdf->Cell(20,7,$month,0,1,'');
+		$pdf->Cell(20,7,date_format(date_create("$year-$month"),'F'),0,1,'');
 
 		$pdf->SetFont('Arial','B',12);
-		$pdf->Cell(30,7,'Nama',1,0,'');
-		$pdf->Cell(50,7,'Tunjangan',1,0,'');
-		$pdf->Cell(50,7,'Potongan',1,0,'');
-		$pdf->Cell(50,7,'Tunjangan Bersih',1,1,'');
+		$pdf->Cell(10,7,'No',1,0,'');
+		$pdf->Cell(70,7,'Nama',1,0,'');
+		$pdf->Cell(40,7,'Tunjangan',1,0,'');
+		$pdf->Cell(30,7,'Potongan',1,0,'');
+		$pdf->Cell(40,7,'Tunjangan Bersih',1,1,'');
 
 		$pdf->SetFont('Arial','',12);
 
 		foreach ($tukin as $key => $value) {
-			$pdf->Cell(30,7,$value->nama,1,0,'');
-			// $pdf->Cell(30,7,$value->bulan,1,0,'');
-			$pdf->Cell(50,7,number_format($value->tunjangan_jabatan,2),1,0,'');
-			$pdf->Cell(50,7,number_format($value->potongan,2),1,0,'');
-			$pdf->Cell(50,7,number_format($value->jml_bersih,2),1,1,'');
+			$pdf->Cell(10,7,$key+1,1,0,'');
+			$pdf->Cell(70,7,$value->nama,1,0,'');
+			$pdf->Cell(40,7,number_format($value->tunjangan_jabatan,2),1,0,'');
+			$pdf->Cell(30,7,number_format($value->potongan,2),1,0,'');
+			$pdf->Cell(40,7,number_format($value->jml_bersih,2),1,1,'');
 		}
 
 
@@ -499,16 +504,16 @@ class Report extends CI_Controller {
 		// $pdf->Cell(40,7,'NIP. '.(isset($kepala_sign->nip))?$kepala_sign->nip:"",0,0,'C');
 
 		$pdf->SetY($signY);
-		$pdf->SetX(160);
-		$pdf->Cell(40,7,'Jakarta, ' . date('d M Y'),0,1,'C');
-		$pdf->SetX(160);
-		$pdf->Cell(40,7,'Kepala Esselon I',0,1,'C');
-		// $pdf->ln(40);
+		$pdf->SetX(140);
+		$pdf->Cell(60,7,'Jakarta, ' . date('d M Y'),0,1,'C');
+		$pdf->SetX(140);
+		$pdf->Cell(60,7,'Kepala Esselon I',0,1,'C');
+		// $pdf->ln(60);
 		$pdf->SetY($nameY);
-		$pdf->SetX(160);
-		$pdf->Cell(40,7,$namaEselon ,0,1,'C');
-		$pdf->SetX(160);
-		$pdf->Cell(40,7,'NIP. '.$nipEselon,0,0,'C');
+		$pdf->SetX(140);
+		$pdf->Cell(60,7,$namaEselon ,0,1,'C');
+		$pdf->SetX(140);
+		$pdf->Cell(60,7,'NIP. '.$nipEselon,0,0,'C');
 
 		$pdf->Output();
 	}
